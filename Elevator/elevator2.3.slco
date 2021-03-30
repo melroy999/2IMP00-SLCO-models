@@ -1,0 +1,130 @@
+model dve_elevator2_3 {
+classes
+	GlobalClass {
+		variables
+			Byte[13] req
+			Integer t
+			Integer p
+			Byte v
+		state machines
+			cabin {
+				variables
+					
+				initial idle
+				states  mov open
+				transitions
+					from idle to mov {
+						v>0
+					}
+
+					from mov to open {
+						t=p
+					}
+
+					from mov to mov {
+						[t<p; p := p-1]
+					}
+
+					from mov to mov {
+						[t>p; p := p+1]
+					}
+
+					from open to idle {
+						[req[p] := 0;v := 0]
+					}
+
+				}
+	
+			environment {
+				variables
+					
+				initial read
+				states  
+				transitions
+					from read to read {
+						[req[0]=0; req[0] := 1]
+					}
+
+					from read to read {
+						[req[1]=0; req[1] := 1]
+					}
+
+					from read to read {
+						[req[2]=0; req[2] := 1]
+					}
+
+					from read to read {
+						[req[3]=0; req[3] := 1]
+					}
+
+					from read to read {
+						[req[4]=0; req[4] := 1]
+					}
+
+					from read to read {
+						[req[5]=0; req[5] := 1]
+					}
+
+					from read to read {
+						[req[6]=0; req[6] := 1]
+					}
+
+					from read to read {
+						[req[7]=0; req[7] := 1]
+					}
+
+					from read to read {
+						[req[8]=0; req[8] := 1]
+					}
+
+					from read to read {
+						[req[9]=0; req[9] := 1]
+					}
+
+					from read to read {
+						[req[10]=0; req[10] := 1]
+					}
+
+					from read to read {
+						[req[11]=0; req[11] := 1]
+					}
+
+					from read to read {
+						[req[12]=0; req[12] := 1]
+					}
+
+				}
+	
+			controller {
+				variables
+					Byte ldir
+				initial wait
+				states  work done
+				transitions
+					from wait to work {
+						[v=0; t := t+(2*ldir)-1]
+					}
+
+					from work to wait {
+						[t<0 or t=13; ldir := 1-ldir]
+					}
+
+					from work to done {
+						t>=0 and t<13 and req[t]=1
+					}
+
+					from work to work {
+						[t>=0 and t<13 and req[t]=0; t := t+(2*ldir)-1]
+					}
+
+					from done to wait {
+						[v := 1]
+					}
+
+				}
+	
+	}
+
+objects
+	globalObject : GlobalClass()
+}

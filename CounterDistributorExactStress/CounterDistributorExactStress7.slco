@@ -1,0 +1,40 @@
+model CounterDistributorExactStress7 {
+    classes
+    CounterDistributorExactStress {
+        variables Integer x a1 a2 a3 a4 a5 a6 a7
+        state machines
+        Counter {
+            initial C states C
+            transitions
+                from C to C {
+                    x := (x + 1) % 7;
+                }
+        }
+        Distributor {
+            initial P
+            transitions
+                from P to P {
+                    [x = 0; a1 := a1 + 1];
+                }
+                from P to P {
+                    [x = 1; a2 := a2 + 1];
+                }
+                from P to P {
+                    [x = 2; a3 := a3 + 1];
+                }
+                from P to P {
+                    [x = 3; a4 := a4 + 1];
+                }
+                from P to P {
+                    [x = 4; a5 := a5 + 1];
+                }
+                from P to P {
+                    [x = 5; a6 := a6 + 1];
+                }
+                from P to P {
+                    [x = 6; a7 := a7 + 1];
+                }
+        }
+    }
+    objects p: CounterDistributorExactStress()
+}

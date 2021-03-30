@@ -1,0 +1,146 @@
+model dve_elevator2_2 {
+classes
+	GlobalClass {
+		variables
+			Byte[10] req
+			Integer t
+			Integer p
+			Byte v
+		state machines
+			cabin {
+				variables
+					
+				initial idle
+				states  mov open
+				transitions
+					from idle to mov {
+						v>0
+					}
+
+					from mov to open {
+						t=p
+					}
+
+					from mov to mov {
+						[t<p; p := p-1]
+					}
+
+					from mov to mov {
+						[t>p; p := p+1]
+					}
+
+					from open to idle {
+						[req[p] := 0;v := 0]
+					}
+
+				}
+	
+			environment {
+				variables
+					
+				initial read
+				states  
+				transitions
+					from read to read {
+						[req[0]=0; req[0] := 1]
+					}
+
+					from read to read {
+						[req[1]=0; req[1] := 1]
+					}
+
+					from read to read {
+						[req[2]=0; req[2] := 1]
+					}
+
+					from read to read {
+						[req[3]=0; req[3] := 1]
+					}
+
+					from read to read {
+						[req[4]=0; req[4] := 1]
+					}
+
+					from read to read {
+						[req[5]=0; req[5] := 1]
+					}
+
+					from read to read {
+						[req[6]=0; req[6] := 1]
+					}
+
+					from read to read {
+						[req[7]=0; req[7] := 1]
+					}
+
+					from read to read {
+						[req[8]=0; req[8] := 1]
+					}
+
+					from read to read {
+						[req[9]=0; req[9] := 1]
+					}
+
+				}
+	
+			controller {
+				variables
+					
+				initial wait
+				states  work done
+				transitions
+					from wait to work {
+						v=0
+					}
+
+					from work to done {
+						[req[0]=1; t := 0]
+					}
+
+					from work to done {
+						[req[1]=1; t := 1]
+					}
+
+					from work to done {
+						[req[2]=1; t := 2]
+					}
+
+					from work to done {
+						[req[3]=1; t := 3]
+					}
+
+					from work to done {
+						[req[4]=1; t := 4]
+					}
+
+					from work to done {
+						[req[5]=1; t := 5]
+					}
+
+					from work to done {
+						[req[6]=1; t := 6]
+					}
+
+					from work to done {
+						[req[7]=1; t := 7]
+					}
+
+					from work to done {
+						[req[8]=1; t := 8]
+					}
+
+					from work to done {
+						[req[9]=1; t := 9]
+					}
+
+					from done to wait {
+						[v := 1]
+					}
+
+				}
+	
+	}
+
+objects
+	globalObject : GlobalClass()
+}

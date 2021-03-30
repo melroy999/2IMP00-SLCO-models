@@ -1,0 +1,22 @@
+model CounterDistributorExactStress1 {
+    classes
+    CounterDistributorExactStress {
+        variables Integer x Integer a1
+        state machines
+        Counter {
+            initial C
+            transitions
+                from C to C {
+                    x := 0;
+                }
+        }
+        Distributor {
+            initial P
+            transitions
+                from P to P {
+                    [x = 0; a1 := a1 + 1];
+                }
+        }
+    }
+    objects p: CounterDistributorExactStress()
+}

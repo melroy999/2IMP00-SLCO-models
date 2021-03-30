@@ -1,0 +1,46 @@
+model CounterDistributorExact9 {
+    classes
+    CounterDistributorExact {
+        variables Integer x
+        state machines
+        Counter {
+            initial C states C
+            transitions
+                from C to C {
+                    x := (x + 1) % 9;
+                }
+        }
+        Distributor {
+            initial P
+            transitions
+                from P to P {
+                    x = 0;
+                }
+                from P to P {
+                    x = 1;
+                }
+                from P to P {
+                    x = 2;
+                }
+                from P to P {
+                    x = 3;
+                }
+                from P to P {
+                    x = 4;
+                }
+                from P to P {
+                    x = 5;
+                }
+                from P to P {
+                    x = 6;
+                }
+                from P to P {
+                    x = 7;
+                }
+                from P to P {
+                    x = 8;
+                }
+        }
+    }
+    objects p: CounterDistributorExact()
+}

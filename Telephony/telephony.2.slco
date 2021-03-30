@@ -1,0 +1,378 @@
+model dve_telephony_2 {
+classes
+	GlobalClass {
+		variables
+			Byte[3] chan := [255,255,255]
+			Byte[3] partner := [255,255,255]
+		state machines
+			User_0 {
+				variables
+					Byte dev := 1
+					Byte mbit
+				initial idle
+				states  dialing calling busy qi talert unobtainable oalert errorstate oconnected dveoringout tpickup tconnected ringback
+				transitions
+					from idle to dialing {
+						[chan[0] = 255; dev := 0;chan[0] := ((0)+(0)*20)]
+					}
+
+					from idle to qi {
+						[chan[0] <> 255; partner[0] := ((chan[0])%20)]
+					}
+
+					from qi to talert {
+						((chan[partner[0]])%20) = 0
+					}
+
+					from qi to idle {
+						[((chan[partner[0]])%20) <> 0; partner[0] := 255]
+					}
+
+					from dialing to idle {
+						[dev := 1;chan[0] := 255]
+					}
+
+					from dialing to calling {
+						[partner[0] := 0]
+					}
+
+					from dialing to calling {
+						[partner[0] := 1]
+					}
+
+					from dialing to calling {
+						[partner[0] := 2]
+					}
+
+					from dialing to calling {
+						[partner[0] := 3]
+					}
+
+					from calling to busy {
+						partner[0] = 0
+					}
+
+					from calling to unobtainable {
+						partner[0] = 3
+					}
+
+					from calling to busy {
+						partner[0] <> 0 and partner[0] <>3 and 
+			chan[partner[0]]<>255
+					}
+
+					from calling to oalert {
+						[partner[0] <> 0 and partner[0] <>3 and chan[partner[0]]=255; chan[partner[0]] := ((0)+(0)*20);chan[0] := ((partner[0])+(0)*20)]
+					}
+
+					from busy to idle {
+						[chan[0] := 255;partner[0] := 255;dev := 1]
+					}
+
+					from oalert to errorstate {
+						((chan[0])%20)<>partner[0]
+					}
+
+					from oalert to oconnected {
+						((chan[0])%20)=partner[0] and ((chan[0])/20) = 1
+					}
+
+					from oalert to dveoringout {
+						((chan[0])%20)=partner[0] and ((chan[0])/20) = 0
+					}
+
+					from oconnected to idle {
+						[dev := 1;chan[0] := 255;chan[partner[0]] := 255]
+					}
+
+					from dveoringout to idle {
+						[dev := 1;chan[0] := 255;partner[0] := ((((partner[0])%20))+(0)*20)]
+					}
+
+					from unobtainable to idle {
+						[chan[0] := 255;partner[0] := 255;dev := 1]
+					}
+
+					from talert to errorstate {
+						dev <> 1 or chan[0] = 255
+					}
+
+					from talert to tpickup {
+						((chan[partner[0]])%20) = 0
+					}
+
+					from talert to idle {
+						((chan[partner[0]])%20) <> 0
+					}
+
+					from tpickup to tconnected {
+						[((chan[partner[0]])%20) = 0 and ((chan[partner[0]])/20) = 0; dev := 0;chan[partner[0]] := ((0)+(1)*20);chan[0] := ((partner[0])+(1)*20)]
+					}
+
+					from tpickup to idle {
+						[chan[partner[0]] = 255 or ((chan[partner[0]])%20) <> 0; dev := 1;partner[0] := 255;chan[0] := 255]
+					}
+
+					from tconnected to tconnected {
+						[((chan[0])/20)=1 and dev = 0; dev := 1]
+					}
+
+					from tconnected to tconnected {
+						[((chan[0])/20)=1 and dev = 1; dev := 0]
+					}
+
+					from tconnected to idle {
+						[((chan[0])/20)=0; partner[0] := 255;chan[0] := 255;dev := 1]
+					}
+
+				}
+	
+			User_1 {
+				variables
+					Byte dev := 1
+					Byte mbit
+				initial idle
+				states  dialing calling busy qi talert unobtainable oalert errorstate oconnected dveoringout tpickup tconnected ringback
+				transitions
+					from idle to dialing {
+						[chan[1] = 255; dev := 0;chan[1] := ((1)+(0)*20)]
+					}
+
+					from idle to qi {
+						[chan[1] <> 255; partner[1] := ((chan[1])%20)]
+					}
+
+					from qi to talert {
+						((chan[partner[1]])%20) = 1
+					}
+
+					from qi to idle {
+						[((chan[partner[1]])%20) <> 1; partner[1] := 255]
+					}
+
+					from dialing to idle {
+						[dev := 1;chan[1] := 255]
+					}
+
+					from dialing to calling {
+						[partner[1] := 0]
+					}
+
+					from dialing to calling {
+						[partner[1] := 1]
+					}
+
+					from dialing to calling {
+						[partner[1] := 2]
+					}
+
+					from dialing to calling {
+						[partner[1] := 3]
+					}
+
+					from calling to busy {
+						partner[1] = 1
+					}
+
+					from calling to unobtainable {
+						partner[1] = 3
+					}
+
+					from calling to busy {
+						partner[1] <> 1 and partner[1] <>3 and 
+			chan[partner[1]]<>255
+					}
+
+					from calling to oalert {
+						[partner[1] <> 1 and partner[1] <>3 and chan[partner[1]]=255; chan[partner[1]] := ((1)+(0)*20);chan[1] := ((partner[1])+(0)*20)]
+					}
+
+					from busy to idle {
+						[chan[1] := 255;partner[1] := 255;dev := 1]
+					}
+
+					from oalert to errorstate {
+						((chan[1])%20)<>partner[1]
+					}
+
+					from oalert to oconnected {
+						((chan[1])%20)=partner[1] and ((chan[1])/20) = 1
+					}
+
+					from oalert to dveoringout {
+						((chan[1])%20)=partner[1] and ((chan[1])/20) = 0
+					}
+
+					from oconnected to idle {
+						[dev := 1;chan[1] := 255;chan[partner[1]] := 255]
+					}
+
+					from dveoringout to idle {
+						[dev := 1;chan[1] := 255;partner[1] := ((((partner[1])%20))+(0)*20)]
+					}
+
+					from unobtainable to idle {
+						[chan[1] := 255;partner[1] := 255;dev := 1]
+					}
+
+					from talert to errorstate {
+						dev <> 1 or chan[1] = 255
+					}
+
+					from talert to tpickup {
+						((chan[partner[1]])%20) = 1
+					}
+
+					from talert to idle {
+						((chan[partner[1]])%20) <> 1
+					}
+
+					from tpickup to tconnected {
+						[((chan[partner[1]])%20) = 1 and ((chan[partner[1]])/20) = 0; dev := 0;chan[partner[1]] := ((1)+(1)*20);chan[1] := ((partner[1])+(1)*20)]
+					}
+
+					from tpickup to idle {
+						[chan[partner[1]] = 255 or ((chan[partner[1]])%20) <> 1; dev := 1;partner[1] := 255;chan[1] := 255]
+					}
+
+					from tconnected to tconnected {
+						[((chan[1])/20)=1 and dev = 0; dev := 1]
+					}
+
+					from tconnected to tconnected {
+						[((chan[1])/20)=1 and dev = 1; dev := 0]
+					}
+
+					from tconnected to idle {
+						[((chan[1])/20)=0; partner[1] := 255;chan[1] := 255;dev := 1]
+					}
+
+				}
+	
+			User_2 {
+				variables
+					Byte dev := 1
+					Byte mbit
+				initial idle
+				states  dialing calling busy qi talert unobtainable oalert errorstate oconnected dveoringout tpickup tconnected ringback
+				transitions
+					from idle to dialing {
+						[chan[2] = 255; dev := 0;chan[2] := ((2)+(0)*20)]
+					}
+
+					from idle to qi {
+						[chan[2] <> 255; partner[2] := ((chan[2])%20)]
+					}
+
+					from qi to talert {
+						((chan[partner[2]])%20) = 2
+					}
+
+					from qi to idle {
+						[((chan[partner[2]])%20) <> 2; partner[2] := 255]
+					}
+
+					from dialing to idle {
+						[dev := 1;chan[2] := 255]
+					}
+
+					from dialing to calling {
+						[partner[2] := 0]
+					}
+
+					from dialing to calling {
+						[partner[2] := 1]
+					}
+
+					from dialing to calling {
+						[partner[2] := 2]
+					}
+
+					from dialing to calling {
+						[partner[2] := 3]
+					}
+
+					from calling to busy {
+						partner[2] = 2
+					}
+
+					from calling to unobtainable {
+						partner[2] = 3
+					}
+
+					from calling to busy {
+						partner[2] <> 2 and partner[2] <>3 and 
+			chan[partner[2]]<>255
+					}
+
+					from calling to oalert {
+						[partner[2] <> 2 and partner[2] <>3 and chan[partner[2]]=255; chan[partner[2]] := ((2)+(0)*20);chan[2] := ((partner[2])+(0)*20)]
+					}
+
+					from busy to idle {
+						[chan[2] := 255;partner[2] := 255;dev := 1]
+					}
+
+					from oalert to errorstate {
+						((chan[2])%20)<>partner[2]
+					}
+
+					from oalert to oconnected {
+						((chan[2])%20)=partner[2] and ((chan[2])/20) = 1
+					}
+
+					from oalert to dveoringout {
+						((chan[2])%20)=partner[2] and ((chan[2])/20) = 0
+					}
+
+					from oconnected to idle {
+						[dev := 1;chan[2] := 255;chan[partner[2]] := 255]
+					}
+
+					from dveoringout to idle {
+						[dev := 1;chan[2] := 255;partner[2] := ((((partner[2])%20))+(0)*20)]
+					}
+
+					from unobtainable to idle {
+						[chan[2] := 255;partner[2] := 255;dev := 1]
+					}
+
+					from talert to errorstate {
+						dev <> 1 or chan[2] = 255
+					}
+
+					from talert to tpickup {
+						((chan[partner[2]])%20) = 2
+					}
+
+					from talert to idle {
+						((chan[partner[2]])%20) <> 2
+					}
+
+					from tpickup to tconnected {
+						[((chan[partner[2]])%20) = 2 and ((chan[partner[2]])/20) = 0; dev := 0;chan[partner[2]] := ((2)+(1)*20);chan[2] := ((partner[2])+(1)*20)]
+					}
+
+					from tpickup to idle {
+						[chan[partner[2]] = 255 or ((chan[partner[2]])%20) <> 2; dev := 1;partner[2] := 255;chan[2] := 255]
+					}
+
+					from tconnected to tconnected {
+						[((chan[2])/20)=1 and dev = 0; dev := 1]
+					}
+
+					from tconnected to tconnected {
+						[((chan[2])/20)=1 and dev = 1; dev := 0]
+					}
+
+					from tconnected to idle {
+						[((chan[2])/20)=0; partner[2] := 255;chan[2] := 255;dev := 1]
+					}
+
+				}
+	
+	}
+
+objects
+	globalObject : GlobalClass()
+}
